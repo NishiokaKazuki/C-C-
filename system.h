@@ -26,6 +26,11 @@
 #define BM_OK  1
 #define BM_NG -1
 
+#define BM_01  1
+#define BM_08  8
+#define BM_24 24
+#define BM_32 32
+
 /* ------------------------------------------------------------------------- */
 /* typedef宣言                                                               */
 /* ------------------------------------------------------------------------- */
@@ -43,21 +48,58 @@ typedef unsigned char  UCHR;
 /* 構造体定義                                                                */
 /* ------------------------------------------------------------------------- */
 
-typedef struct BMP {
-
-    SLNG sl_width;  // 横
-    SLNG sl_height; // 縦
-    SLNG sl_bitcnt; // 色ビット数
-
-}BMPF;
-
+// 1bitカラー
 typedef struct color {
 
-    ULNG ul_colordata;
-    struct color * prev_pt;
-    struct color * next_pt;
+    UCHR          uc_Color; // 色ドット
+    struct color * Prev_pt; // 前ドット
+    struct color * Next_pt; // 次ドット
 
-}CLRD;
+}CL01;
+
+// 8bitカラー
+typedef struct color {
+
+    UCHR          uc_Color; // 色ドット
+    struct color * Prev_pt; // 前ドット
+    struct color * Next_pt; // 次ドット
+
+}CL08;
+
+
+// 24bitカラー
+typedef struct color {
+
+    UCHR      uc_Rcolor;    // 赤
+    UCHR      uc_Gcolor;    // 緑
+    UCHR      uc_Bcolor;    // 青
+    struct color * Prev_pt; // 前ドット
+    struct color * Next_pt; // 次ドット
+
+}CL24;
+
+
+// 32bitカラー
+typedef struct color {
+
+    UCHR      uc_Rcolor;    // 赤
+    UCHR      uc_Gcolor;    // 緑
+    UCHR      uc_Bcolor;    // 青
+    UCHR      uc_Reserve;   // 予約領域
+    struct color * Prev_pt; // 前ドット
+    struct color * Next_pt; // 次ドット
+
+}CL32;
+
+// BMP情報
+typedef struct BMP {
+
+    SLNG   sl_Width;    // 横
+    SLNG   sl_Height;   // 縦
+    UCHR   uc_Bitcnt;   // 色ビット数    
+    void * Imagedata;   // 画像データ
+
+}BMPF;
 
 /* ------------------------------------------------------------------------- */
 /* プロトタイプ宣言                                                          */
