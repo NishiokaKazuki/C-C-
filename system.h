@@ -106,7 +106,8 @@ typedef struct BMP {
 /* ------------------------------------------------------------------------- */
 
 /* ä÷êîêÈåæ ---------------------------------------------------------------- */
-SLNG   ErrerPrint ( SLNG   , SCHR * );
+SLNG   BM_BmpFormatConv ( SLNG * , BMPF * , UCHR   );
+SLNG   ErrerPrint       ( SLNG   , SCHR * );
 
 /* ------------------------------------------------------------------------- */
 /*              Copyright HAL Collage of Technology & Design                 */
