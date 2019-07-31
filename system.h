@@ -49,45 +49,45 @@ typedef unsigned char  UCHR;
 /* ------------------------------------------------------------------------- */
 
 // 1bitカラー
-typedef struct color {
+typedef struct color01 {
 
     UCHR          uc_Color; // 色ドット
-    struct color * Prev_pt; // 前ドット
-    struct color * Next_pt; // 次ドット
+    struct color01 * Prev_pt; // 前ドット
+    struct color01 * Next_pt; // 次ドット
 
 }CL01;
 
 // 8bitカラー
-typedef struct color {
+typedef struct color08 {
 
     UCHR          uc_Color; // 色ドット
-    struct color * Prev_pt; // 前ドット
-    struct color * Next_pt; // 次ドット
+    struct color08 * Prev_pt; // 前ドット
+    struct color08 * Next_pt; // 次ドット
 
 }CL08;
 
 
 // 24bitカラー
-typedef struct color {
+typedef struct color24 {
 
     UCHR      uc_Rcolor;    // 赤
     UCHR      uc_Gcolor;    // 緑
     UCHR      uc_Bcolor;    // 青
-    struct color * Prev_pt; // 前ドット
-    struct color * Next_pt; // 次ドット
+    struct color24 * Prev_pt; // 前ドット
+    struct color24 * Next_pt; // 次ドット
 
 }CL24;
 
 
 // 32bitカラー
-typedef struct color {
+typedef struct color32 {
 
     UCHR      uc_Rcolor;    // 赤
     UCHR      uc_Gcolor;    // 緑
     UCHR      uc_Bcolor;    // 青
     UCHR      uc_Reserve;   // 予約領域
-    struct color * Prev_pt; // 前ドット
-    struct color * Next_pt; // 次ドット
+    struct color32 * Prev_pt; // 前ドット
+    struct color32 * Next_pt; // 次ドット
 
 }CL32;
 

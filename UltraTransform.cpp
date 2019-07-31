@@ -1,6 +1,6 @@
 ﻿/* ------------------------------------------------------------------------- */
 /*                                                                           */
-/* 画像装飾システム                                                          */
+/* BMPbitカラー変換                                                          */
 /*                                                                           */
 /* ------------------------------------------------------------------------- */
 /*  番号    更新内容                                更新日      名前         */
@@ -8,21 +8,15 @@
 /* 000000   新規作成                                2019/07/30  西岡  和輝   */
 /* ------------------------------------------------------------------------- */
 
-#define RED__ 0.2126
-#define BLUE_ 0.7152
-#define GREEN 0.0722
-
 /* ------------------------------------------------------------------------- */
 /* includeファイル                                                           */
 /* ------------------------------------------------------------------------- */
 
 #include "system.h"
+#include "UltraTransform.h"
 
-void * BM_1BitColorConv  ( SLNG * , CL01 * , CL32 * );
-void * BM_8BitColorConv  ( SLNG * , CL08 * , CL32 * );
-void * BM_24BitColorConv ( SLNG * , CL24 * , CL32 * );
-void * BM_32BitColorConv ( SLNG * , CL32 * , void * , UCHR   );
-SLNG   BM_ImageSetPointer( SLNG * , void * , void * , UCHR   );
+UltraTransform:: UltraTransform() { printf("UltraTransform読み込み\n"); }
+UltraTransform::~UltraTransform() { printf("UltraTransform終了\n");     }
 
 /* ------------------------------------------------------------------------- */
 /* 関数名   : BM_BmpFormatConv                                               */
@@ -34,7 +28,7 @@ SLNG   BM_ImageSetPointer( SLNG * , void * , void * , UCHR   );
 /* 作成日   : 2019/07/09       西岡  和輝       新規作成                     */
 /* ------------------------------------------------------------------------- */
 
-SLNG   BM_BmpFormatConv ( SLNG * sl_Errchk , BMPF * Filedata , UCHR uc_Bitcnt ) {
+SLNG   UltraTransform::BM_BmpFormatConv ( SLNG * sl_Errchk , BMPF * Filedata , UCHR uc_Bitcnt ) {
 
     /* 引数チェック -------------------------------------------------------- */
     // NULLポインタの場合
@@ -105,22 +99,31 @@ SLNG   BM_BmpFormatConv ( SLNG * sl_Errchk , BMPF * Filedata , UCHR uc_Bitcnt ) 
             switch ( Filedata -> uc_Bitcnt ) {
     
                 // 1bit
-                case BM_01 : CL01 * New_pt1 = ( CL01 * )void_pt;
-                             void_pt = New_pt1 -> Prev_pt;
-                             free ( New_pt1 -> Prev_pt );
+                case BM_01 : {
+                                 CL01 * New_pt1 = ( CL01 * ) void_pt; 
+                                 if ( ( New_pt1 -> Next_pt ) == NULL ) { break; }// NULLポインタかチェック
+                                 void_pt = New_pt1 -> Next_pt;
+                                 free ( New_pt1 -> Prev_pt );
+                             }
                              break;
 
                 // 8bit
-                case BM_08 : CL08 * New_pt1 = ( CL08 * )void_pt;
-                             void_pt = New_pt1 -> Prev_pt;
-                             free ( New_pt1 -> Prev_pt );
+                case BM_08 : {
+                                 CL08 * New_pt2 = ( CL08 * )void_pt;
+                                 if ( ( New_pt2 -> Next_pt ) == NULL ) { break; }// NULLポインタかチェック
+                                 void_pt = New_pt2 -> Next_pt;
+                                 free ( New_pt2 -> Prev_pt );
+                             }
 
                              break;
 
                 // 24bit
-                case BM_24 : CL24 * New_pt1 = ( CL24 * )void_pt;
-                             void_pt = New_pt1 -> Prev_pt;
-                             free ( New_pt1 -> Prev_pt );
+                case BM_24 : {
+                                 CL24 * New_pt3 = ( CL24 * )void_pt;
+                                 if ( ( New_pt3 -> Next_pt ) == NULL ) { break; }// NULLポインタかチェック
+                                 void_pt = New_pt3 -> Next_pt;
+                                 free ( New_pt3 -> Prev_pt );
+                             }
 
                              break;
 
@@ -136,7 +139,7 @@ SLNG   BM_BmpFormatConv ( SLNG * sl_Errchk , BMPF * Filedata , UCHR uc_Bitcnt ) 
 
             if ( ( Curr_pt32 -> Next_pt ) == NULL ) { break; }// NULLポインタかチェック
         
-            Curr_pt32 = Curr_pt32 -> Next_pt;
+            void_pt = Curr_pt32 -> Next_pt;
             free ( Curr_pt32 -> Prev_pt );
         
         }
@@ -170,7 +173,7 @@ SLNG   BM_BmpFormatConv ( SLNG * sl_Errchk , BMPF * Filedata , UCHR uc_Bitcnt ) 
 /* 作成日   : 2019/07/30       西岡  和輝       新規作成                     */
 /* ------------------------------------------------------------------------- */
 
-void * BM_1BitColorConv  ( SLNG * sl_Errchk , CL01 * Curr_pt01 , CL32 * Curr_pt32 ) {
+void * UltraTransform::BM_1BitColorConv  ( SLNG * sl_Errchk , CL01 * Curr_pt01 , CL32 * Curr_pt32 ) {
 
     /* 引数チェック -------------------------------------------------------- */
 
@@ -207,7 +210,7 @@ void * BM_1BitColorConv  ( SLNG * sl_Errchk , CL01 * Curr_pt01 , CL32 * Curr_pt3
 /* 作成日   : 2019/07/31       西岡  和輝       新規作成                     */
 /* ------------------------------------------------------------------------- */
 
-void * BM_8BitColorConv  ( SLNG * sl_Errchk , CL08 * Curr_pt08 , CL32 * Curr_pt32 ) {
+void * UltraTransform::BM_8BitColorConv  ( SLNG * sl_Errchk , CL08 * Curr_pt08 , CL32 * Curr_pt32 ) {
 
     /* 引数チェック -------------------------------------------------------- */
 
@@ -239,7 +242,7 @@ void * BM_8BitColorConv  ( SLNG * sl_Errchk , CL08 * Curr_pt08 , CL32 * Curr_pt3
 /* 作成日   : 2019/07/31       西岡  和輝       新規作成                     */
 /* ------------------------------------------------------------------------- */
 
-void * BM_24BitColorConv  ( SLNG * sl_Errchk , CL24 * Curr_pt24 , CL32 * Curr_pt32 ) {
+void * UltraTransform::BM_24BitColorConv  ( SLNG * sl_Errchk , CL24 * Curr_pt24 , CL32 * Curr_pt32 ) {
 
     /* 引数チェック -------------------------------------------------------- */
 
@@ -272,7 +275,7 @@ void * BM_24BitColorConv  ( SLNG * sl_Errchk , CL24 * Curr_pt24 , CL32 * Curr_pt
 /* 作成日   : 2019/07/31       西岡  和輝       新規作成                     */
 /* ------------------------------------------------------------------------- */
 
-void * BM_32BitColorConv  ( SLNG * sl_Errchk , CL32 * Curr_pt32 , void * void_pt , UCHR uc_Bitcnt ) {
+void * UltraTransform::BM_32BitColorConv  ( SLNG * sl_Errchk , CL32 * Curr_pt32 , void * void_pt , UCHR uc_Bitcnt ) {
 
     /* 引数チェック -------------------------------------------------------- */
 
@@ -289,25 +292,30 @@ void * BM_32BitColorConv  ( SLNG * sl_Errchk , CL32 * Curr_pt32 , void * void_pt
     switch ( uc_Bitcnt ) {
     
         // 1bit
-        case BM_01 : CL01 * Curr_pt01 = ( CL01 * )void_pt;
-                     if ( Curr_pt01 -> uc_Color == 0xFF ) { Curr_pt32 -> uc_Rcolor = Curr_pt32 -> uc_Gcolor = Curr_pt32 -> uc_Bcolor = 0xFF; }
-                     else                                 { Curr_pt32 -> uc_Rcolor = Curr_pt32 -> uc_Gcolor = Curr_pt32 -> uc_Bcolor = 0x00; }
+        case BM_01 : {
+                         CL01 * Curr_pt01 = ( CL01 * )void_pt;
+                         if ( Curr_pt01 -> uc_Color == 0xFF ) { Curr_pt32 -> uc_Rcolor = Curr_pt32 -> uc_Gcolor = Curr_pt32 -> uc_Bcolor = 0xFF; }
+                         else                                 { Curr_pt32 -> uc_Rcolor = Curr_pt32 -> uc_Gcolor = Curr_pt32 -> uc_Bcolor = 0x00; }
+                     }
                      break;
 
         // 8bit
-        case BM_08 : CL08 * Curr_pt08 = ( CL08 * )void_pt;
-                     Curr_pt32 -> uc_Rcolor = Curr_pt08 -> uc_Color / RED__;
-                     Curr_pt32 -> uc_Gcolor = Curr_pt08 -> uc_Color / BLUE_;
-                     Curr_pt32 -> uc_Bcolor = Curr_pt08 -> uc_Color / GREEN;
-
+        case BM_08 : {
+                         CL08 * Curr_pt08 = ( CL08 * )void_pt;
+                         Curr_pt32 -> uc_Rcolor = Curr_pt08 -> uc_Color / RED__;
+                         Curr_pt32 -> uc_Gcolor = Curr_pt08 -> uc_Color / BLUE_;
+                         Curr_pt32 -> uc_Bcolor = Curr_pt08 -> uc_Color / GREEN;
+                     }
                      break;
 
         // 24bit
-        case BM_24 : CL24 * Curr_pt24 = ( CL24 * )void_pt;
+        case BM_24 : {
+                         CL24 * Curr_pt24 = ( CL24 * )void_pt;
                      
-                     Curr_pt32 -> uc_Rcolor = Curr_pt24 -> uc_Rcolor;
-                     Curr_pt32 -> uc_Gcolor = Curr_pt24 -> uc_Gcolor;
-                     Curr_pt32 -> uc_Bcolor = Curr_pt24 -> uc_Bcolor;
+                         Curr_pt32 -> uc_Rcolor = Curr_pt24 -> uc_Rcolor;
+                         Curr_pt32 -> uc_Gcolor = Curr_pt24 -> uc_Gcolor;
+                         Curr_pt32 -> uc_Bcolor = Curr_pt24 -> uc_Bcolor;
+                     }
 
                      break;
 
@@ -329,7 +337,7 @@ void * BM_32BitColorConv  ( SLNG * sl_Errchk , CL32 * Curr_pt32 , void * void_pt
 /* 作成日   : 2019/07/30       西岡  和輝       新規作成                     */
 /* ------------------------------------------------------------------------- */
 
-void * BM_ImageNewPointer ( SLNG * sl_Errchk , UCHR uc_Bitcnt ) {
+void * UltraTransform::BM_ImageNewPointer ( SLNG * sl_Errchk , UCHR uc_Bitcnt ) {
     
     /* 変数宣言 ------------------------------------------------------------ */
     void * New_pt;
@@ -346,6 +354,7 @@ void * BM_ImageNewPointer ( SLNG * sl_Errchk , UCHR uc_Bitcnt ) {
         case BM_32 : New_pt = calloc ( 1 , sizeof( CL32 ) ); // 32bit
                      break;
         default    : * sl_Errchk = ErrerPrint ( 1, ( SCHR * ) "aa" ); // 異常値
+                     return 0;
 
     }
 
@@ -365,7 +374,7 @@ void * BM_ImageNewPointer ( SLNG * sl_Errchk , UCHR uc_Bitcnt ) {
 /* 作成日   : 2019/07/30       西岡  和輝       新規作成                     */
 /* ------------------------------------------------------------------------- */
 
-SLNG   BM_ImageSetPointer ( SLNG * sl_Errchk , void * Curr_pt1 , void * Curr_pt2 , UCHR uc_Bitcnt ) {
+SLNG   UltraTransform::BM_ImageSetPointer ( SLNG * sl_Errchk , void * Curr_pt1 , void * Curr_pt2 , UCHR uc_Bitcnt ) {
     
     /* 引数チェック -------------------------------------------------------- */
 
@@ -382,38 +391,44 @@ SLNG   BM_ImageSetPointer ( SLNG * sl_Errchk , void * Curr_pt1 , void * Curr_pt2
     switch ( uc_Bitcnt ) {
     
         // 1bit
-        case BM_01 : CL01 * New_pt1 = ( CL01 * )Curr_pt1;
-                     CL01 * New_pt2 = ( CL01 * )Curr_pt2;
+        case BM_01 : {
+                         CL01 * New_pt1 = ( CL01 * )Curr_pt1;
+                         CL01 * New_pt2 = ( CL01 * )Curr_pt2;
 
-                     New_pt1 -> Next_pt = New_pt2;
-                     New_pt2 -> Prev_pt = New_pt1;
-
+                         New_pt1 -> Next_pt = New_pt2;
+                         New_pt2 -> Prev_pt = New_pt1;
+                     }
                      break;
 
         // 8bit
-        case BM_08 : CL08 * New_pt1 = ( CL08 * )Curr_pt1;
-                     CL08 * New_pt2 = ( CL08 * )Curr_pt2;
+        case BM_08 : {
+                         CL08 * New_pt3 = ( CL08 * )Curr_pt1;
+                         CL08 * New_pt4 = ( CL08 * )Curr_pt2;
 
-                     New_pt1 -> Next_pt = New_pt2;
-                     New_pt2 -> Prev_pt = New_pt1;
-
+                         New_pt3 -> Next_pt = New_pt4;
+                         New_pt4 -> Prev_pt = New_pt3;
+                     }
                      break;
 
         // 24bit
-        case BM_24 : CL24 * New_pt1 = ( CL24 * )Curr_pt1;
-                     CL24 * New_pt2 = ( CL24 * )Curr_pt2;
+        case BM_24 : {
+                         CL24 * New_pt5 = ( CL24 * )Curr_pt1;
+                         CL24 * New_pt6 = ( CL24 * )Curr_pt2;
 
-                     New_pt1 -> Next_pt = New_pt2;
-                     New_pt2 -> Prev_pt = New_pt1;
+                         New_pt5 -> Next_pt = New_pt6;
+                         New_pt6 -> Prev_pt = New_pt5;
+                     }
 
                      break;
 
         // 32bit
-        case BM_32 : CL32 * New_pt1 = ( CL32 * )Curr_pt1;
-                     CL32 * New_pt2 = ( CL32 * )Curr_pt2;
+        case BM_32 : {
+                         CL32 * New_pt7 = ( CL32 * )Curr_pt1;
+                         CL32 * New_pt8 = ( CL32 * )Curr_pt2;
 
-                     New_pt1 -> Next_pt = New_pt2;
-                     New_pt2 -> Prev_pt = New_pt1;
+                         New_pt7 -> Next_pt = New_pt8;
+                         New_pt8 -> Prev_pt = New_pt7;
+                     }
 
                      break;
 
